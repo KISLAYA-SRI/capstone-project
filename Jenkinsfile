@@ -4,7 +4,7 @@ pipeline{
     environment {
         NEXUS_DOCKER_URL="35.209.45.241:8085"
         NEXUS_URL="35.209.45.241:8081"
-        IMAGE_NAME="spring-chat-app"
+        IMAGE_NAME="simple-app"
         IMAGE_TAG="${env.BUILD_ID}"
     }
 
@@ -49,6 +49,9 @@ pipeline{
     //     }
         stage('sonar') {
             steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                  	input(id: "sonar", message: "SonarQube", ok: 'OK')
+                }
                 dir("Api1"){
                     sh 'mvn clean verify sonar:sonar \
                             -Dsonar.projectKey=kislaya \
@@ -60,6 +63,9 @@ pipeline{
         stage('Jar to Nexus') {
             steps {
                 script {
+                    timeout(time: 5, unit: 'MINUTES') {
+                  	    input(id: "jarnexus", message: "jar-nexus", ok: 'OK')
+                    }
                     dir("Api1"){
                         pom = readMavenPom file: "pom.xml";
                         filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
@@ -74,6 +80,9 @@ pipeline{
         stage('Docker build and push') {
             steps {
                 script{
+                    timeout(time: 5, unit: 'MINUTES') {
+                  	    input(id: "dockernexus", message: "docker-nexus", ok: 'OK')
+                    }
                     dir("Api1"){
                         withDockerRegistry(credentialsId: 'nexus', url: "http://${NEXUS_DOCKER_URL}") {
                             // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
@@ -94,7 +103,7 @@ pipeline{
     post{
         always{
             deleteDir()
-            sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+            //sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
         }
     }
 }
