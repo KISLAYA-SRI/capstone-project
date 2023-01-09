@@ -2,7 +2,8 @@ pipeline{
     agent any 
 
     environment {
-        NEXUS_URL="20.169.185.165:8085"
+        NEXUS_DOCKER_URL="35.209.45.241:8085"
+        NEXUS_URL="35.209.45.241:8081"
         IMAGE_NAME="spring-chat-app"
         IMAGE_TAG="${env.BUILD_ID}"
     }
@@ -74,9 +75,9 @@ pipeline{
             steps {
                 script{
                     dir("Api1"){
-                        withDockerRegistry(credentialsId: 'nexus', url: "http://${NEXUS_URL}") {
+                        withDockerRegistry(credentialsId: 'nexus', url: "http://${NEXUS_DOCKER_URL}") {
                             // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
-                            sh "mvn compile jib:build -Djib.to.image=${NEXUS_URL}/${IMAGE_NAME}:${IMAGE_TAG} -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp"
+                            sh "mvn compile jib:build -Djib.to.image=${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG} -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp"
                         }
                     }
                 }
