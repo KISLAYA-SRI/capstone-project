@@ -10,7 +10,7 @@ pipeline{
     stages{
         stage('mvn build') {
             steps {
-                sh 'mvn -B -DskipTest clean package'
+                sh 'cd Api1 && mvn -B -DskipTest clean package'
             }
         }
     //     stage('mvn test') {
