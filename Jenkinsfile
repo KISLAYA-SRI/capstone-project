@@ -99,7 +99,7 @@ pipeline{
         stage("Deploy war file"){
             steps{
                 script{
-                    ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/install_tomcat.yaml', vaultCredentialsId: 'ansible-vault'
+                    ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/deploy_war_tomcat.yaml', vaultCredentialsId: 'ansible-vault'
                 }
             }
         }
