@@ -1,0 +1,30 @@
+--- 
+- name: Install and Configure Tomat 
+  hosts: server1
+  become: yes
+  gather_facts: false
+  vars_files: secret.yaml
+  vars:
+    nexus_war_link: "http://35.209.45.241:8081/repository/maven-snapshots/api1/api1/0.0.1-SNAPSHOT/api1-0.0.1-20230109.164002-6.war"
+  tasks:
+    - name: Download the war file
+      get_url:
+        url: "{{ nexus_war_link }}"
+        dest: /opt/tomcat/webapps
+
+    - name: Reload and Start the Tomcat service
+      systemd:
+        daemon_reload: true
+        name: tomcat 
+        state: started
+        enabled: true 
+
+    - name: Check the status of Tomcat service
+      shell: systemctl status tomcat
+      register: tomcat
+      notify: tomcat-service
+
+  handlers:
+    - name: tomcat-service
+      debug:
+        var: tomcat.stdout_lines

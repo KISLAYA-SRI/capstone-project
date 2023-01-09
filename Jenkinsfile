@@ -100,7 +100,6 @@ pipeline{
     post{
         always{
             deleteDir()
-            //sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
         }
     }
 }
