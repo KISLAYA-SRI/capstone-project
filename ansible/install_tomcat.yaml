@@ -1,6 +1,6 @@
 --- 
 - name: Install and Configure Tomat 
-  hosts: server1
+  hosts: all
   become: yes
   gather_facts: false
   vars:
