@@ -65,7 +65,7 @@ pipeline{
                         echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
                         artifactPath = filesByGlob[0].path;
                 
-                        nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: artifactPath, type: pom.packaging]], credentialsId: 'nexus', groupId: pom.artifactId, nexusUrl: '${NEXUS_URL}', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: pom.version  
+                        nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: artifactPath, type: pom.packaging]], credentialsId: 'nexus', groupId: pom.artifactId, nexusUrl: "${NEXUS_URL}", nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: pom.version  
                     }
                 }
             }
@@ -74,9 +74,9 @@ pipeline{
             steps {
                 script{
                     dir("Api1"){
-                        withDockerRegistry(credentialsId: 'nexus', url: 'http://${NEXUS_URL}') {
+                        withDockerRegistry(credentialsId: 'nexus', url: "http://${NEXUS_URL}") {
                             // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
-                            sh 'mvn compile jib:build -Djib.to.image=${NEXUS_URL}/${IMAGE_NAME}:${IMAGE_TAG} -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
+                            sh "mvn compile jib:build -Djib.to.image=${NEXUS_URL}/${IMAGE_NAME}:${IMAGE_TAG} -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp"
                         }
                     }
                 }
@@ -93,7 +93,7 @@ pipeline{
     post{
         always{
             deleteDir()
-            sh 'docker rmi ${IMAGE_NAME}:${IMAGE_TAG}'
+            sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
         }
     }
 }
