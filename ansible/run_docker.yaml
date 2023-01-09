@@ -3,10 +3,8 @@
   become: true
   vars_files: secret.yaml 
   vars:
-    container_count: 4
-    default_container_name: docker
-    default_container_image: ubuntu
-    default_container_command: sleep 1d
+    default_container_name: simple-app
+    default_container_image: "35.209.45.241:8085/simple-app:27"
 
   tasks:
     - name: Login to Nexus Repository
@@ -22,7 +20,6 @@
 
     - name: Create default containers
       community.docker.docker_container:
-        name: "{{ default_container_name }}{{ item }}"
+        name: "{{ default_container_name }}"
         image: "{{ default_container_image }}"
-        command: "{{ default_container_command }}"
         state: present
