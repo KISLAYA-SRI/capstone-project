@@ -103,6 +103,13 @@ pipeline{
                 }
             }
         }
+        stage("Install Docker"){
+            steps{
+                script{
+                    ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/install_docker.yaml'
+                }
+            }
+        }
     }
     post{
         always{
