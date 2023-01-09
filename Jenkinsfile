@@ -89,13 +89,13 @@ pipeline{
             }
         }
         
-        // stage("Ansible"){
-        //     steps{
-        //         script{
-        //             ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/tomcat.yaml'
-        //         }
-        //     }
-        // }
+        stage("Ansible"){
+            steps{
+                script{
+                    ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/install_tomcat.yaml'
+                }
+            }
+        }
     }
     post{
         always{
