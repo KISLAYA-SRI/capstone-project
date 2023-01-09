@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: true
+  vars_files: secret.yaml 
+  vars:
+    container_count: 4
+    default_container_name: docker
+    default_container_image: ubuntu
+    default_container_command: sleep 1d
+
+  tasks:
+    - name: Login to Nexus Repository
+      docker_login:
+        registry_url: 
+        username: "admin"
+        passowrd: "{{password}}"
+
+    - name: Pull default Docker image
+      community.docker.docker_image:
+        name: "{{ default_container_image }}"
+        source: pull
+
+    - name: Create default containers
+      community.docker.docker_container:
+        name: "{{ default_container_name }}{{ item }}"
+        image: "{{ default_container_image }}"
+        command: "{{ default_container_command }}"
+        state: present
