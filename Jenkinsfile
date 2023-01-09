@@ -64,9 +64,10 @@ pipeline{
                         filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
                         echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
                         artifactPath = filesByGlob[0].path;
+                
+                        nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: artifactPath, type: pom.packaging]], credentialsId: 'nexus', groupId: pom.artifactId, nexusUrl: '${NEXUS_URL}', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: pom.version  
                     }
                 }
-                nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: artifactPath, type: pom.packaging]], credentialsId: 'nexus', groupId: pom.artifactId, nexusUrl: '${NEXUS_URL}', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: pom.version  
             }
         }
         stage('Docker build and push') {
