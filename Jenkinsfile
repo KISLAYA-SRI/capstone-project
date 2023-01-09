@@ -10,7 +10,9 @@ pipeline{
     stages{
         stage('mvn build') {
             steps {
-                sh 'cd Api1 && mvn -B -DskipTest clean package'
+                dir("Api1"){
+                    sh 'mvn -B -DskipTest clean package'
+                }
             }
         }
     //     stage('mvn test') {
@@ -46,19 +48,23 @@ pipeline{
     //     }
         stage('sonar') {
             steps {
-                sh 'mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=kislaya \
-                        -Dsonar.host.url=http://35.206.100.225:9000 \
-                        -Dsonar.login=sqp_6ab0c20b3f0ae2249d921f656dc8930bb7f6fec7'     
+                dir("Api1"){
+                    sh 'mvn clean verify sonar:sonar \
+                            -Dsonar.projectKey=kislaya \
+                            -Dsonar.host.url=http://35.206.100.225:9000 \
+                            -Dsonar.login=sqp_6ab0c20b3f0ae2249d921f656dc8930bb7f6fec7' 
+                }    
             }
         }
         stage('Jar to Nexus') {
             steps {
                 script {
-                    pom = readMavenPom file: "pom.xml";
-                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
-                    artifactPath = filesByGlob[0].path;
+                    dir("Api1"){
+                        pom = readMavenPom file: "pom.xml";
+                        filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                        echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                        artifactPath = filesByGlob[0].path;
+                    }
                 }
                 nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: artifactPath, type: pom.packaging]], credentialsId: 'nexus', groupId: pom.artifactId, nexusUrl: '${NEXUS_URL}', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: pom.version  
             }
@@ -66,10 +72,12 @@ pipeline{
         stage('Docker build and push') {
             steps {
                 script{
-                     withDockerRegistry(credentialsId: 'nexus', url: 'http://${NEXUS_URL}') {
-                        // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
-                        sh 'mvn compile jib:build -Djib.to.image=${NEXUS_URL}/${IMAGE_NAME}:${IMAGE_TAG} -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
-                     }
+                    dir("Api1"){
+                        withDockerRegistry(credentialsId: 'nexus', url: 'http://${NEXUS_URL}') {
+                            // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
+                            sh 'mvn compile jib:build -Djib.to.image=${NEXUS_URL}/${IMAGE_NAME}:${IMAGE_TAG} -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
+                        }
+                    }
                 }
             }
         }
