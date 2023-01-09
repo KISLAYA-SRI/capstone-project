@@ -1,2 +1,2 @@
 [servers]
-client ansible_host=52.90.252.93 ansible_user=ubuntu ansible_connection=ssh 
+client ansible_host=35.193.188.246 ansible_user=root ansible_connection=ssh 
