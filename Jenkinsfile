@@ -63,9 +63,7 @@ pipeline{
         stage('Jar to Nexus') {
             steps {
                 script {
-                    timeout(time: 5, unit: 'MINUTES') {
-                  	    input(id: "jarnexus", message: "jar-nexus", ok: 'OK')
-                    }
+                    
                     dir("Api1"){
                         pom = readMavenPom file: "pom.xml";
                         filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
@@ -80,9 +78,7 @@ pipeline{
         stage('Docker build and push') {
             steps {
                 script{
-                    timeout(time: 5, unit: 'MINUTES') {
-                  	    input(id: "dockernexus", message: "docker-nexus", ok: 'OK')
-                    }
+                    
                     dir("Api1"){
                         withDockerRegistry(credentialsId: 'nexus', url: "http://${NEXUS_DOCKER_URL}") {
                             // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
