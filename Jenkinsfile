@@ -110,10 +110,10 @@ pipeline{
                 }
             }
         }
-        stage("Deploy war file"){
+        stage("Deploy docker image"){
             steps{
                 script{
-                    ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/deploy_war_tomcat.yaml', vaultCredentialsId: 'ansible-vault'
+                    ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
                 }
             }
         }
