@@ -60,7 +60,7 @@ pipeline{
                 }    
             }
         }
-        stage('Jar to Nexus') {
+        stage('Upload Jar to Nexus') {
             steps {
                 script {
                     
@@ -75,7 +75,7 @@ pipeline{
                 }
             }
         }
-        stage('Docker build and push') {
+        stage('Docker build and push to Nexus') {
             steps {
                 script{
                     
@@ -88,6 +88,7 @@ pipeline{
                 }
             }
         }
+        
         // stage("Ansible"){
         //     steps{
         //         script{
