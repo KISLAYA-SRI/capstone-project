@@ -9,6 +9,8 @@
   tasks:
     - name: Download the war file
       get_url:
+        url_username: "admin"
+        url_password: "{{ password }}"
         url: "{{ nexus_war_link }}"
         dest: /opt/tomcat/webapps
 
