@@ -12,7 +12,7 @@
         url_username: "admin"
         url_password: "{{ password }}"
         url: "{{ nexus_war_link }}"
-        dest: /opt/tomcat/webapps
+        dest: /opt/tomcat/webapps/simple-app.war
 
     - name: Reload and Start the Tomcat service
       systemd:
