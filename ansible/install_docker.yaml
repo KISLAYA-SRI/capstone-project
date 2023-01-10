@@ -43,9 +43,9 @@
       pip:
         name: docker
 
-    - name: Add 
+    - name: Add insecure-registries in daemon.json
       copy:
-        path: /etc/docker/daemon.json
+        dest: /etc/docker/daemon.json
         content: |
           {
             "insecure-registries" : ["{{ registry_url }}"]
