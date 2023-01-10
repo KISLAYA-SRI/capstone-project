@@ -5,11 +5,11 @@
   vars:
     default_container_name: simple-app
     default_container_image: "35.209.45.241:8085/simple-app:27"
-
+    registry_url: "35.209.45.241:8085"
   tasks:
     - name: Login to Nexus Repository
       docker_login:
-        registry_url: 
+        registry_url: "{{ registry_url }}"
         username: "admin"
         passowrd: "{{password}}"
 
