@@ -1,6 +1,8 @@
 ---
 - hosts: all
   become: true
+  vars:
+    registry_url: "35.209.45.241:8085"
   tasks:
     - name: Install aptitude
       apt:
@@ -40,3 +42,18 @@
     - name: Install Docker Module for Python
       pip:
         name: docker
+
+    - name: Add 
+      lineinfile:
+        path: /etc/docker/daemon.json
+        line: |
+          {
+            "insecure-registries" : ["{{ registry_url }}"]
+          }
+
+    - name: Reload and Start the Tomcat service
+      systemd:
+        daemon_reload: true
+        name: docker 
+        state: started
+        enabled: true 
