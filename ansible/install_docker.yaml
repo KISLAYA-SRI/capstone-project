@@ -44,9 +44,9 @@
         name: docker
 
     - name: Add 
-      lineinfile:
+      copy:
         path: /etc/docker/daemon.json
-        line: |
+        content: |
           {
             "insecure-registries" : ["{{ registry_url }}"]
           }
