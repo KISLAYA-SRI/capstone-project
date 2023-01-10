@@ -46,7 +46,7 @@
     - name: Add insecure-registries in daemon.json
       copy:
         dest: /etc/docker/daemon.json
-        src: files/insecure-registry.json.j2
+        src: files/registry.j2
 
     - name: Reload and Start the Tomcat service
       systemd:
