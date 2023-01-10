@@ -75,14 +75,22 @@ pipeline{
                 }
             }
         }
-        stage('Docker build and push to Nexus') {
+        stage('Docker build') {
             steps {
                 script{
-                    
+                    dir("Api1"){
+                        sh "mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
+        stage('Docker push to Nexus') {
+            steps {
+                script{
                     dir("Api1"){
                         withDockerRegistry(credentialsId: 'nexus', url: "http://${NEXUS_DOCKER_URL}") {
                             // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
-                            sh "mvn compile jib:build -Djib.to.image=${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG} -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp"
+                            sh "docker push ${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
                         }
                     }
                 }
