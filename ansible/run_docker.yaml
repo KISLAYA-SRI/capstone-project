@@ -11,7 +11,7 @@
       docker_login:
         registry_url: "{{ registry_url }}"
         username: "admin"
-        passowrd: "{{password}}"
+        password: "{{password}}"
 
     - name: Pull default Docker image
       docker_image:
