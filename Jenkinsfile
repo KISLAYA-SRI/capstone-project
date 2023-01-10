@@ -123,7 +123,7 @@ pipeline{
             steps{
                 script{
                     // ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
-                    ansiblePlaybook credentialsId: 'jenkins-chat-app', extras: --extra-vars="image_tag=${IMAGE_TAG}", inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
+                    ansiblePlaybook credentialsId: 'jenkins-chat-app', extras: '--extra-vars="image_tag=${IMAGE_TAG}"', inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
                 }
             }
         }
