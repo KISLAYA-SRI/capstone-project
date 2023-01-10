@@ -46,14 +46,11 @@
     - name: Add insecure-registries in daemon.json
       copy:
         dest: /etc/docker/daemon.json
-        content: |
-          {
-            "insecure-registries" : ["{{ registry_url }}"]
-          }
+        src: files/insecure-registry.json.j2
 
     - name: Reload and Start the Tomcat service
       systemd:
         daemon_reload: true
         name: docker 
-        state: started
+        state: restarted
         enabled: true 
