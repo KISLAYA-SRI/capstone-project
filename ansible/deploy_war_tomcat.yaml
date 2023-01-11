@@ -7,6 +7,10 @@
   vars:
     nexus_repository_url: "http://35.209.45.241:8081/repository/maven-snapshots"
   tasks:
+    - name: Install lxml
+      apt:
+        name: python3-lxml
+        state: present 
     - name: "Download war the file"
       maven_artifact:
         group_id: api1
