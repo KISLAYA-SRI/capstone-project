@@ -5,7 +5,7 @@ pipeline{
         NEXUS_DOCKER_URL="35.209.45.241:8085"
         NEXUS_URL="35.209.45.241:8081"
         IMAGE_NAME="simple-app"
-        IMAGE_TAG="${env.BUILD_ID}"
+        IMAGE_TAG="61"  //"${env.BUILD_ID}"
         VM_IP=""
     }
 
@@ -123,6 +123,7 @@ pipeline{
             steps{
                 script{
                     // ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
+                    //change image tag
                     ansiblePlaybook credentialsId: 'jenkins-chat-app', extras: '--extra-vars="image_tag=${IMAGE_TAG}"', inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
                 }
             }

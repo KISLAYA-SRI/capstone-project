@@ -6,7 +6,7 @@
     default_container_name: simple-app
     default_container_image: "35.209.45.241:8085/simple-app"
     registry_url: "35.209.45.241:8085"
-    image_tag: "48"
+    image_tag: "61"
   tasks:
     - name: Login to Nexus Repository
       docker_login:
@@ -14,10 +14,10 @@
         username: "admin"
         password: "{{password}}"
       
-    - name: Stop running containers
-      docker_container:
-        name: "{{ default_container_name }}"
-        state: stopped
+    # - name: Stop running containers
+    #   docker_container:
+    #     name: "{{ default_container_name }}"
+    #     state: stopped
 
     - name: Pull default Docker image
       docker_image:
