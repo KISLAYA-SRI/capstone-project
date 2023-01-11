@@ -98,36 +98,36 @@ pipeline{
     //         }
     //     }
         
-        stage("Install Tomcat"){
-            steps{
-                script{
-                    ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/install_tomcat.yaml'
-                }
-            }
-        }
-        stage("Deploy war file"){
-            steps{
-                script{
-                    ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/deploy_war_tomcat.yaml', vaultCredentialsId: 'ansible-vault'
-                }
-            }
-        }
-        stage("Install Docker"){
-            steps{
-                script{
-                    ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/install_docker.yaml'
-                }
-            }
-        }
-        stage("Deploy docker image"){
-            steps{
-                script{
-                    // ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
-                    //change image tag
-                    ansiblePlaybook credentialsId: 'jenkins-chat-app', extras: '--extra-vars="image_tag=${IMAGE_TAG}"', inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
-                }
-            }
-        }
+        // stage("Install Tomcat"){
+        //     steps{
+        //         script{
+        //             ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/install_tomcat.yaml'
+        //         }
+        //     }
+        // }
+        // stage("Deploy war file"){
+        //     steps{
+        //         script{
+        //             ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/deploy_war_tomcat.yaml', vaultCredentialsId: 'ansible-vault'
+        //         }
+        //     }
+        // }
+        // stage("Install Docker"){
+        //     steps{
+        //         script{
+        //             ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/install_docker.yaml'
+        //         }
+        //     }
+        // }
+        // stage("Deploy docker image"){
+        //     steps{
+        //         script{
+        //             // ansiblePlaybook credentialsId: 'jenkins-chat-app', disableHostKeyChecking: true, inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
+        //             //change image tag
+        //             ansiblePlaybook credentialsId: 'jenkins-chat-app', extras: '--extra-vars="image_tag=${IMAGE_TAG}"', inventory: 'ansible/dev.inv', playbook: 'ansible/run_docker.yaml', vaultCredentialsId: 'ansible-vault'
+        //         }
+        //     }
+        // }
         stage("Create Server and comp."){
             steps{
                 dir("terraform/kind-k8s"){
