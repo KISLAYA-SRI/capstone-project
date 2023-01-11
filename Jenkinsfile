@@ -132,6 +132,7 @@ pipeline{
             steps{
                 dir("terraform/kind-k8s"){
                     withCredentials([string(credentialsId: 'vm-ssh-password', variable: 'vm-passowrd')]) {
+                        sh "echo $vm-passowrd"
                         sh 'terraform init'
                         sh 'terraform plan -var="password=${vm-passowrd}"'
                         sh 'terraform apply -var="password=${vm-passowrd}" --auto-approve'
