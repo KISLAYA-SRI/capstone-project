@@ -53,10 +53,16 @@ variable "nsg" {
       src_addr_pre = "14.102.43.0/24"
     }
     rule_3 = {
-      name     = "ssh"
+      name     = "ssh-1"
       priority = "340"
       port     = "22"
-      src_addr_pre = "14.102.43.0/24,20.232.35.0/24"
+      src_addr_pre = "14.102.43.0/24"
+    }
+    rule_4 = {
+      name     = "ssh-2"
+      priority = "350"
+      port     = "22"
+      src_addr_pre = "20.232.35.0/24"
     }
   }
 }
