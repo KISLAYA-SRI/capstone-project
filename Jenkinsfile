@@ -64,7 +64,6 @@ pipeline{
         stage('Upload Jar to Nexus') {
             steps {
                 script {
-                    
                     dir("Api1"){
                         pom = readMavenPom file: "pom.xml";
                         filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
