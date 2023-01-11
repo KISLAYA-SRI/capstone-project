@@ -131,11 +131,11 @@ pipeline{
         stage("Create Server and comp."){
             steps{
                 dir("terraform/kind-k8s"){
-                    withCredentials([string(credentialsId: 'vm-ssh-password', variable: 'vm-passowrd')]) {
-                        sh "echo $vm-passowrd"
+                    withCredentials([string(credentialsId: 'vm-ssh-password', variable: 'vm_passowrd')]) {
+                        sh "echo $vm_passowrd"
                         sh 'terraform init'
-                        sh 'terraform plan -var="password=${vm-passowrd}"'
-                        sh 'terraform apply -var="password=${vm-passowrd}" --auto-approve'
+                        sh 'terraform plan -var="password=${vm_passowrd}"'
+                        sh 'terraform apply -var="password=${vm_passowrd}" --auto-approve'
                         sh 'VM_IP="${terraform output public_ip_address}"'
                         sh "echo $VM_IP"
                     }
