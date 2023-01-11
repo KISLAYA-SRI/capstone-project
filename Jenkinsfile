@@ -135,7 +135,7 @@ pipeline{
                         sh 'terraform init'
                         sh 'terraform plan -var="password=${vm-passowrd}"'
                         sh 'terraform apply -var="password=${vm-passowrd}" --auto-approve'
-                        VM_IP="${terraform output public_ip_address}"
+                        sh 'VM_IP="${terraform output public_ip_address}"'
                         sh "echo $VM_IP"
                     }
                 }
