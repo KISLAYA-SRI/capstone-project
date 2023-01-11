@@ -5,14 +5,19 @@
   gather_facts: false
   vars_files: secret.yaml
   vars:
-    nexus_war_link: "http://35.209.45.241:8081/repository/maven-snapshots/api1/api1/0.0.1-SNAPSHOT/api1-0.0.1-20230109.164002-6.war"
+    nexus_repository_url: "http://35.209.45.241:8081/repository/maven-snapshots"
   tasks:
-    - name: Download the war file
-      get_url:
-        url_username: "admin"
-        url_password: "{{ password }}"
-        url: "{{ nexus_war_link }}"
-        dest: /opt/tomcat/webapps/simple-app.war
+    - name: "Download war the file"
+      maven_artifact:
+        group_id: api1
+        artifact_id: api1
+        version: 0.0.1-SNAPSHOT
+        extension: war
+        repository_url: "{{ nexus_repository_url }}"
+        username: "admin"
+        password: "{{ password }}"
+        dest: "/opt/tomcat/webapps/simple-app.war"
+        mode: '0644'
 
     - name: Reload and Start the Tomcat service
       systemd:
