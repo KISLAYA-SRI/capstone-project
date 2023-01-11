@@ -10,93 +10,93 @@ pipeline{
     }
 
     stages{
-        stage('mvn build') {
-            steps {
-                dir("Api1"){
-                    sh 'mvn -B -DskipTest clean package'
-                }
-            }
-        }
-    //     stage('mvn test') {
-    //         when {
-    //            expression {stage == 'unittest'}
-    //          }
-
+    //     stage('mvn build') {
     //         steps {
-    //             sh 'mvn test'
-    //             junit 'target/surefire-reports/*.xml'
+    //             dir("Api1"){
+    //                 sh 'mvn -B -DskipTest clean package'
+    //             }
     //         }
     //     }
-    //     stage('checkstyle') {
-    //         when {
-    //       expression {stage == 'checkstyle'}
-    //   }
+    // //     stage('mvn test') {
+    // //         when {
+    // //            expression {stage == 'unittest'}
+    // //          }
 
-    //         steps {
-    //             sh 'mvn checkstyle:checkstyle'
-    //             recordIssues(tools: [checkStyle(pattern: '**/checkstyle-result.xml')])
+    // //         steps {
+    // //             sh 'mvn test'
+    // //             junit 'target/surefire-reports/*.xml'
+    // //         }
+    // //     }
+    // //     stage('checkstyle') {
+    // //         when {
+    // //       expression {stage == 'checkstyle'}
+    // //   }
+
+    // //         steps {
+    // //             sh 'mvn checkstyle:checkstyle'
+    // //             recordIssues(tools: [checkStyle(pattern: '**/checkstyle-result.xml')])
                 
+    // //         }
+    // //     }
+    // //      stage('code coverage') {
+    // //          when {
+    // //       expression {stage == 'codecoverage'}
+    // //   }
+
+    // //         steps {
+    // //             jacoco()
+                
+    // //         }
+    // //     }
+    //     // stage('sonar') {
+    //     //     steps {
+    //     //         timeout(time: 5, unit: 'MINUTES') {
+    //     //           	input(id: "sonar", message: "SonarQube", ok: 'OK')
+    //     //         }
+    //     //         dir("Api1"){
+    //     //             sh 'mvn clean verify sonar:sonar \
+    //     //                     -Dsonar.projectKey=kislaya \
+    //     //                     -Dsonar.host.url=http://35.206.100.225:9000 \
+    //     //                     -Dsonar.login=sqp_6ab0c20b3f0ae2249d921f656dc8930bb7f6fec7' 
+    //     //         }    
+    //     //     }
+    //     // }
+    //     stage('Upload Jar to Nexus') {
+    //         steps {
+    //             script {
+    //                 dir("Api1"){
+    //                     pom = readMavenPom file: "pom.xml";
+    //                     filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+    //                     echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+    //                     artifactPath = filesByGlob[0].path;
+                
+    //                     nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: artifactPath, type: pom.packaging]], credentialsId: 'nexus', groupId: pom.artifactId, nexusUrl: "${NEXUS_URL}", nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: pom.version  
+    //                 }
+    //             }
     //         }
     //     }
-    //      stage('code coverage') {
-    //          when {
-    //       expression {stage == 'codecoverage'}
-    //   }
-
+    //     stage('Docker build') {
     //         steps {
-    //             jacoco()
-                
+    //             script{
+    //                 dir("Api1"){
+    //                     sh "mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
+    //                 }
+    //             }
     //         }
     //     }
-        // stage('sonar') {
-        //     steps {
-        //         timeout(time: 5, unit: 'MINUTES') {
-        //           	input(id: "sonar", message: "SonarQube", ok: 'OK')
-        //         }
-        //         dir("Api1"){
-        //             sh 'mvn clean verify sonar:sonar \
-        //                     -Dsonar.projectKey=kislaya \
-        //                     -Dsonar.host.url=http://35.206.100.225:9000 \
-        //                     -Dsonar.login=sqp_6ab0c20b3f0ae2249d921f656dc8930bb7f6fec7' 
-        //         }    
-        //     }
-        // }
-        stage('Upload Jar to Nexus') {
-            steps {
-                script {
-                    dir("Api1"){
-                        pom = readMavenPom file: "pom.xml";
-                        filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                        echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
-                        artifactPath = filesByGlob[0].path;
-                
-                        nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: artifactPath, type: pom.packaging]], credentialsId: 'nexus', groupId: pom.artifactId, nexusUrl: "${NEXUS_URL}", nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: pom.version  
-                    }
-                }
-            }
-        }
-        stage('Docker build') {
-            steps {
-                script{
-                    dir("Api1"){
-                        sh "mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
-                    }
-                }
-            }
-        }
-        stage('Docker push to Nexus') {
-            steps {
-                script{
-                    dir("Api1"){
-                        withDockerRegistry(credentialsId: 'nexus', url: "http://${NEXUS_DOCKER_URL}") {
-                            // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
-                            sh "docker tag simple-app ${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
-                            sh "docker push ${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
-                        }
-                    }
-                }
-            }
-        }
+    //     stage('Docker push to Nexus') {
+    //         steps {
+    //             script{
+    //                 dir("Api1"){
+    //                     withDockerRegistry(credentialsId: 'nexus', url: "http://${NEXUS_DOCKER_URL}") {
+    //                         // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
+    //                         sh "docker tag simple-app ${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
+    //                         sh "docker push ${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
         
         stage("Install Tomcat"){
             steps{
