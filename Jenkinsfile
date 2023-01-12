@@ -135,15 +135,17 @@ pipeline{
                         sh 'terraform init'
                         sh 'terraform plan -var="password=${vm_passowrd}"'
                         sh 'terraform apply -var="password=${vm_passowrd}" --auto-approve'
-                        sh "$VM_IP=${terraform output public_ip_address}"
-                        sh "echo $VM_IP"
                     }
                 }
             }
         }
         stage("Run helm in k8s"){
+            environment {
+               VM_IP = "${terraform output public_ip_address}" 
+            }
             steps{
                 dir("terraform/kind-k8s"){
+                        echo "$VM_IP"
                 }
             }
         }
