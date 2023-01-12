@@ -15,7 +15,6 @@ resource "null_resource" "install_kind" {
   provisioner "file" {
     source      = "script.sh"
     destination = "/home/kislaya/script.sh"
-    # direction= "download"
   }
 
   provisioner "remote-exec" {
@@ -25,11 +24,10 @@ resource "null_resource" "install_kind" {
     ]
   }
 
-  # provisioner "file" {
-  #   source      = "/home/kislaya/.kube/config"
-  #   destination = "C:\\Users\\kissriva\\Documents\\DevOps\\Hands-on\\CapstoneProject\\terraform\\kind-k8s"
-  #   direction = "download"
-  # }
+  provisioner "file" {
+    source      = "helm/simple-app"
+    destination = "/home/kislaya"
+  }
 
   depends_on = [azurerm_linux_virtual_machine.vm]
 }
