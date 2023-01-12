@@ -26,9 +26,7 @@ sudo apt-get update
 sudo apt-get install helm --yes
 
 # Install Istio
-mkdir istio 
-cd /home/kislaya/istio/ 
-sudo curl -sL https://istio.io/downloadIstioctl | sh -
+sudo curl -L https://istio.io/downloadIstioctl | sh -
 cd istio-1.16.1
 export PATH=$HOME/.istioctl/bin:$PATH
 sudo istioctl install --set profile=demo -y

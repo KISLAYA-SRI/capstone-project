@@ -6,7 +6,7 @@ pipeline{
         NEXUS_URL="35.209.45.241:8081"
         IMAGE_NAME="simple-app"
         IMAGE_TAG="61"  //"${env.BUILD_ID}"
-        VM_IP=""
+        VM_IP="0.0.0.0"
     }
 
     stages{
@@ -132,13 +132,18 @@ pipeline{
             steps{
                 dir("terraform/kind-k8s"){
                     withCredentials([string(credentialsId: 'vm-ssh-password', variable: 'vm_passowrd')]) {
-                        sh "echo $vm_passowrd"
                         sh 'terraform init'
                         sh 'terraform plan -var="password=${vm_passowrd}"'
                         sh 'terraform apply -var="password=${vm_passowrd}" --auto-approve'
-                        sh 'VM_IP="${terraform output public_ip_address}"'
+                        sh "$VM_IP=${terraform output public_ip_address}"
                         sh "echo $VM_IP"
                     }
+                }
+            }
+        }
+        stage("Run helm in k8s"){
+            steps{
+                dir("terraform/kind-k8s"){
                 }
             }
         }
