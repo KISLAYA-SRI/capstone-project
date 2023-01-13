@@ -151,7 +151,7 @@ pipeline{
                         }
                         withCredentials([string(credentialsId: 'vm-ssh-password', variable: 'vm_passowrd')]) {
                             echo "$VM_IP"
-                            sh "sshpass -p ${vm_passowrd} ssh -o StrictHostKeyChecking=no kislaya@${VM_IP} 'sudo helm upgrade simple-app simple-app/'"
+                            sh "sshpass -p ${vm_passowrd} ssh -o StrictHostKeyChecking=no kislaya@${VM_IP} 'sudo helm upgrade --set image.tag=${IMAGE_TAG} simple-app simple-app/'"
                         }
                     }
                 }
@@ -164,6 +164,16 @@ pipeline{
                         sh 'terraform init'
                         sh 'terraform plan'
                         sh 'terraform apply --auto-approve'
+                    }
+                }
+            }
+        }
+        stage("Helm deploy simple-app"){
+            steps{
+                dir("terraform/aks-k8s/helm"){
+                    script {   
+                        sh 'az aks get-credentials --resource-group capstone-aks-rg --name capstone-aks-aks'         
+                        sh "helm install --set image.tag=${IMAGE_TAG} simple-app simple-app/"
                     }
                 }
             }
