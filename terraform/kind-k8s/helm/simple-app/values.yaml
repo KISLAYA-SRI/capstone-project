@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: 35.209.45.241:8085
+  repository: 35.209.45.241:8085/simple-app
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "8080"
+  tag: "1"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -37,7 +37,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: LoadBalancer
+  type: NodePort
   port: 8080
 
 ingress:
