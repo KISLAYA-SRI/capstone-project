@@ -147,11 +147,11 @@ pipeline{
                 dir("terraform/kind-k8s"){
                     script{
                         timeout(time: 5, unit: 'MINUTES') {
-                  			input(id: "sshpass", message: "sshpass and private repo in kind", ok: 'ok')
+                  			input(id: "private-repo", message: "private repo in kind", ok: 'ok')
                         }
                         withCredentials([string(credentialsId: 'vm-ssh-password', variable: 'vm_passowrd')]) {
                             echo "$VM_IP"
-                            sh "sshpass -p ${vm_passowrd} ssh kislaya@${VM_IP} 'sudo helm upgrade simple-app simple-app/'"
+                            sh "sshpass -p ${vm_passowrd} ssh -o StrictHostKeyChecking=no kislaya@${VM_IP} 'sudo helm upgrade simple-app simple-app/'"
                         }
                     }
                 }
