@@ -5,7 +5,7 @@ pipeline{
         NEXUS_DOCKER_URL="35.209.45.241:8085"
         NEXUS_URL="35.209.45.241:8081"
         IMAGE_NAME="simple-app"
-        IMAGE_TAG="61"  //"${env.BUILD_ID}"
+        IMAGE_TAG="${env.BUILD_ID}"
         VM_IP="0.0.0.0"
     }
 
@@ -21,6 +21,10 @@ pipeline{
             steps {
                 dir("Api1"){
                     sh 'mvn test'
+                    junit 'target/surefire-reports/*.xml'
+                    sh 'mvn checkstyle:checkstyle'
+                    recordIssues(tools: [checkStyle(pattern: '**/checkstyle-result.xml')])
+                    jacoco()
                 }
             }
         }
@@ -65,7 +69,6 @@ pipeline{
                 script{
                     dir("Api1"){
                         withDockerRegistry(credentialsId: 'nexus', url: "http://${NEXUS_DOCKER_URL}") {
-                            // sh 'mvn compile jib:build -Djib.allowInsecureRegistries=true -DsendCredentialsOverHttp'
                             sh "docker tag simple-app ${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
                             sh "docker push ${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
                         }
@@ -150,7 +153,7 @@ pipeline{
                 dir("terraform/aks-k8s/helm"){
                     script {   
                         sh 'az aks get-credentials --resource-group capstone-aks-rg --name capstone-aks-aks'         
-                        sh "helm upgrade simple-app simple-app/"
+                        sh "helm upgrade --set image.tag=${IMAGE_TAG} simple-app simple-app/"
                     }
                 }
             }
@@ -159,6 +162,7 @@ pipeline{
     post{
         always{
             deleteDir()
+            sh "docker rmi ${NEXUS_DOCKER_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
         }
     }
 }
