@@ -27,7 +27,9 @@ sudo apt-get install helm --yes
 
 # Install Istio
 sudo curl -L https://istio.io/downloadIstioctl | sh -
-cd istio-1.16.1
-export PATH=$HOME/.istioctl/bin:$PATH
-sudo istioctl install --set profile=demo -y
+cd .istioctl/bin/
+# export PATH=$HOME/.istioctl/bin:$PATH
+sudo ./istioctl install --set profile=demo -y
+cd /home/kislaya
 sudo kubectl label namespace default istio-injection=enabled
+
