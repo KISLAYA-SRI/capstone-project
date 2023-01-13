@@ -6,8 +6,8 @@ resource "azurerm_resource_group" "rg" {
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "${local.resource_name_prefix}-${var.aks}"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = var.region
+  resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "${var.aks}"
 
   default_node_pool {
