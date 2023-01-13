@@ -173,7 +173,7 @@ pipeline{
                 dir("terraform/aks-k8s/helm"){
                     script {   
                         sh 'az aks get-credentials --resource-group capstone-aks-rg --name capstone-aks-aks'         
-                        sh "helm install --set image.tag=${IMAGE_TAG} simple-app simple-app/"
+                        sh "helm upgrade simple-app simple-app/"
                     }
                 }
             }
