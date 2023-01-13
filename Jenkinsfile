@@ -157,6 +157,7 @@ pipeline{
     }
     post{
         always{
+            echo "hii"
             //deleteDir()
         }
     }
