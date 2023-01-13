@@ -145,7 +145,26 @@ pipeline{
         stage("Run helm in k8s"){
             steps{
                 dir("terraform/kind-k8s"){
-                        echo "$VM_IP"
+                    script{
+                        timeout(time: 5, unit: 'MINUTES') {
+                  			input(id: "sshpass", message: "sshpass and private repo in kind", ok: 'ok')
+                        }
+                        withCredentials([string(credentialsId: 'vm-ssh-password', variable: 'vm_passowrd')]) {
+                            echo "$VM_IP"
+                            sh "sshpass -p ${vm_passowrd} ssh kislaya@${VM_IP} 'sudo helm upgrade simple-app simple-app/'"
+                        }
+                    }
+                }
+            }
+        }
+        stage("Create AKS and comp."){
+            steps{
+                dir("terraform/aks-k8s"){
+                    script {            
+                        sh 'terraform init'
+                        sh 'terraform plan'
+                        sh 'terraform apply --auto-approve'
+                    }
                 }
             }
         }

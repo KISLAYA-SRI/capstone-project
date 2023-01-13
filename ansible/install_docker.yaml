@@ -48,7 +48,7 @@
         dest: /etc/docker/daemon.json
         src: files/registry.j2
 
-    - name: Reload and Start the Tomcat service
+    - name: Reload and Start the docker service
       systemd:
         daemon_reload: true
         name: docker 
