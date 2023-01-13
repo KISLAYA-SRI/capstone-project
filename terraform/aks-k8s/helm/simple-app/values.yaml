@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: "kissriva/simple-app"
+  repository: kissriva/simple-app
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "8080"
@@ -39,7 +39,6 @@ securityContext: {}
 service:
   type: LoadBalancer
   port: 8080
-  nodePort: 30008
 
 ingress:
   enabled: false
