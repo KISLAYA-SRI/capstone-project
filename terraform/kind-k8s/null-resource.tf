@@ -25,9 +25,9 @@ resource "null_resource" "install_kind" {
   }
 
   provisioner "file" {
-    source      = "helm\\simple-app"
+    source      = "helm/simple-app"
     destination = "/home/kislaya"
-  }
-
+  } 
+ 
   depends_on = [azurerm_linux_virtual_machine.vm]
 }
